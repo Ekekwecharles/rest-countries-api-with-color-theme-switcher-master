@@ -27,14 +27,18 @@ const StyledHeader = styled.header`
   }
 `;
 
+const DarkModeContainer = styled.div`
+  cursor: pointer;
+`;
+
 export default function Header() {
   return (
     <StyledHeader>
       <div>Where is the world?</div>
-      <div>
+      <DarkModeContainer>
         <HiOutlineMoon style={{ fontSize: "1.5rem" }} />
         <p>Dark Mode</p>
-      </div>
+      </DarkModeContainer>
     </StyledHeader>
   );
 }

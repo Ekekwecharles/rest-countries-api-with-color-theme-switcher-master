@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import Card from "../components/Card";
+import Filter from "../components/Filter";
 
 const StyledHomepage = styled.div`
   background-color: var(--color-bg);
@@ -9,8 +11,8 @@ const StyledHomepage = styled.div`
 
 const Input = styled.input`
   border: none;
-  width: 300px;
-  padding: 1rem 4rem;
+  width: 400px;
+  padding: 1.5rem 5rem;
   border-radius: 5px;
   color: var(--color-input);
 
@@ -28,6 +30,15 @@ const Input = styled.input`
 const SearchFilterMenu = styled.div`
   display: flex;
   justify-content: space-between;
+  position: relative;
+  /* border: 1px solid red; */
+`;
+
+const Countries = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  gap: 4rem;
+  margin-top: 4rem;
 `;
 
 export default function Homepage() {
@@ -41,16 +52,25 @@ export default function Homepage() {
               fill: " var(--color-input)",
               position: "absolute",
               top: "50%",
-              marginLeft: "1.2rem",
+              marginLeft: "1.7rem",
               transform: "translateY(-50%)",
             }}
           />
           <Input placeholder="Search for a country..." />
         </div>
-        <div>Filter</div>
+        <Filter />
       </SearchFilterMenu>
 
-      <div></div>
+      <Countries>
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
+      </Countries>
     </StyledHomepage>
   );
 }
