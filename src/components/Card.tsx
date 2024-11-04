@@ -4,6 +4,7 @@ const StyledCard = styled.div`
   border-radius: 5px;
   overflow: hidden;
   background-color: var(--elements-bg);
+  box-shadow: 0px 2px 10px 0px var(--box-shadow-color);
 
   p {
     font-size: 1.4rem;
@@ -28,28 +29,37 @@ const CardDetailsContainer = styled.div`
 
 const CountryImage = styled.img`
   width: 100%;
+  height: 20rem;
   display: block;
 `;
 
-export default function Card() {
+type cardProps = {
+  img: string;
+  pop: number;
+  reg: string;
+  cap: string;
+  country: string;
+};
+
+export default function Card({ img, pop, reg, cap, country }: cardProps) {
   return (
     <StyledCard>
       <div>
-        <CountryImage src="germany.png" alt="germany" />
+        <CountryImage src={img} alt={country} />
       </div>
 
       <CardDetailsContainer>
-        <CardHeader>Germany</CardHeader>
+        <CardHeader>{country}</CardHeader>
 
         <div>
           <p>
-            Populations: <span>32323232</span>
+            Populations: <span>{pop}</span>
           </p>
           <p>
-            Regions: <span>Europe</span>
+            Regions: <span>{reg}</span>
           </p>
           <p>
-            Capital: <span>Berlin</span>
+            Capital: <span>{cap}</span>
           </p>
         </div>
       </CardDetailsContainer>

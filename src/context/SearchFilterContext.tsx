@@ -34,6 +34,7 @@ function SearchFilterProvider({ children }: searchFilterProps) {
 
   function toggleFilterOptions() {
     setFilterOptionsOpen((value) => !value);
+    
   }
 
   return (

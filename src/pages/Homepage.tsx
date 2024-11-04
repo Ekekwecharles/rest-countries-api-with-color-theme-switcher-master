@@ -1,37 +1,16 @@
 import styled from "styled-components";
-import { FaMagnifyingGlass } from "react-icons/fa6";
 import Card from "../components/Card";
 import Filter from "../components/Filter";
+import { useQuery } from "@tanstack/react-query";
+import { getCountries } from "../services/apiCountries";
+import Spinner from "../ui/Spinner";
+import Search from "../components/Search";
+import SearchFilterMenu from "../components/SearchFilterMenu";
 
 const StyledHomepage = styled.div`
   background-color: var(--color-bg);
   padding: 2.5rem 4rem;
   height: 100%;
-`;
-
-const Input = styled.input`
-  border: none;
-  width: 400px;
-  padding: 1.5rem 5rem;
-  border-radius: 5px;
-  color: var(--color-input);
-
-  &:focus {
-    outline: none;
-  }
-
-  &::placeholder {
-    font-family: inherit;
-    color: var(--color-input);
-    opacity: 0.7;
-  }
-`;
-
-const SearchFilterMenu = styled.div`
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  /* border: 1px solid red; */
 `;
 
 const Countries = styled.div`
@@ -41,35 +20,43 @@ const Countries = styled.div`
   margin-top: 4rem;
 `;
 
+interface Country {
+  capital: string;
+  region: string;
+  name: string;
+  population: number;
+  flags: {
+    png: string;
+  };
+}
+
 export default function Homepage() {
+  const { isLoading, data: countries } = useQuery<Country[]>({
+    queryFn: getCountries,
+    queryKey: ["countries"],
+  });
+
+  if (isLoading) return <Spinner />;
+  console.log("COUNTRIES", countries);
+
   return (
     <StyledHomepage>
       <SearchFilterMenu>
-        <div style={{ position: "relative" }}>
-          <FaMagnifyingGlass
-            style={{
-              fontSize: "1.4rem",
-              fill: " var(--color-input)",
-              position: "absolute",
-              top: "50%",
-              marginLeft: "1.7rem",
-              transform: "translateY(-50%)",
-            }}
-          />
-          <Input placeholder="Search for a country..." />
-        </div>
+        <Search />
         <Filter />
       </SearchFilterMenu>
 
       <Countries>
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+        {countries?.map((country) => (
+          <Card
+            key={country.name}
+            cap={country.capital}
+            reg={country.region}
+            country={country.name}
+            pop={country.population}
+            img={country.flags.png}
+          />
+        ))}
       </Countries>
     </StyledHomepage>
   );
