@@ -1,50 +1,59 @@
-# React + TypeScript + Vite
+# Rest Countries Api
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Rest Countries Api with color theme switcher
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [Overview](#overview)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Overview
 
-- Configure the top-level `parserOptions` property like this:
+This project is a country information app that allows users to search and view details about different countries. It includes features like filtering, dynamic routing, darkmode and responsive design to enhance the user experience.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Features
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- Display a list of [items, e.g., countries] with details in card format.
+- Search and filter functionality.
+- Detailed view of each item with more specific information.
+- Persistent caching and data management.
+- State management with Redux and Context API.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Technologies Used
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+This project was built with the following technologies:
+
+- **React**: A JavaScript library for building user interfaces.
+- **TypeScript**: Adds type safety to JavaScript code.
+- **Styled Components**: Allows writing CSS in JavaScript with styled components.
+- **React Query**: Fetches, caches, and synchronizes server data with the UI.
+- **Redux**: Manages application-level state.
+- **Context API**: Provides state sharing across components.
+- **React Router**: Handles routing in single-page applications.
+- **React Icons**: Provides icons to enhance UI.
+
+## Getting Started
+
+To run this project locally, follow these steps:
+
+### Prerequisites
+
+- Node.js and npm/yarn installed on your machine.
+- Clone this repository.
+
+### Installation
+
+1. Install the project dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
