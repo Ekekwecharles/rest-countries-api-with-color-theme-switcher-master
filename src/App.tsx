@@ -12,7 +12,7 @@ import CountryInfoPage from "./pages/CountryInfoPage";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 0,
+      refetchOnWindowFocus: false,
     },
   },
 });

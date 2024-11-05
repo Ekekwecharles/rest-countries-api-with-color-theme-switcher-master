@@ -1,16 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { MutableRefObject } from "react";
 
 interface MySliceState {
-  searchRef: MutableRefObject<HTMLDivElement | null> | null;
-  filterRef: MutableRefObject<HTMLDivElement | null> | null;
-  searchFilteContainerRef: MutableRefObject<HTMLDivElement | null> | null;
+  searchWidth: number | null;
+  filterWidth: number | null;
+  searchFilterContainerWidth: number | null;
 }
 
 const initialState: MySliceState = {
-  searchRef: null,
-  filterRef: null,
-  searchFilteContainerRef: null,
+  searchWidth: null,
+  filterWidth: null,
+  searchFilterContainerWidth: null,
 };
 
 const mySlice = createSlice({
@@ -18,20 +17,20 @@ const mySlice = createSlice({
   initialState,
 
   reducers: {
-    setSearchRef(state, action) {
-      state.searchRef = action.payload;
+    setSearchWidth(state, action) {
+      state.searchWidth = action.payload;
     },
 
-    setFilterRef(state, action) {
-      state.filterRef = action.payload;
+    setFilterWidth(state, action) {
+      state.filterWidth = action.payload;
     },
 
-    setSearchFilterContainerRef(state, action) {
-      state.searchFilteContainerRef = action.payload;
+    setSearchFilterContainerWidth(state, action) {
+      state.searchFilterContainerWidth = action.payload;
     },
   },
 });
 
-export const { setFilterRef, setSearchRef, setSearchFilterContainerRef } =
+export const { setFilterWidth, setSearchWidth, setSearchFilterContainerWidth } =
   mySlice.actions;
 export default mySlice.reducer;

@@ -1,10 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledCard = styled.div`
   border-radius: 5px;
   overflow: hidden;
   background-color: var(--elements-bg);
-  box-shadow: 0px 2px 10px 0px var(--box-shadow-color);
+  /* box-shadow: 0px 2px 10px 0px var(--box-shadow-color); */
+  box-shadow: 0px 0px 10px 2px var(--box-shadow-color);
+  cursor: pointer;
 
   p {
     font-size: 1.4rem;
@@ -38,25 +41,30 @@ type cardProps = {
   pop: number;
   reg: string;
   cap: string;
-  country: string;
+  name: string;
+  country: object;
 };
 
-export default function Card({ img, pop, reg, cap, country }: cardProps) {
+export default function Card({ img, pop, reg, cap, name, country }: cardProps) {
+  const navigate = useNavigate();
+
   return (
-    <StyledCard>
+    <StyledCard
+      onClick={() => navigate("/country-info", { state: { country } })}
+    >
       <div>
-        <CountryImage src={img} alt={country} />
+        <CountryImage src={img} alt={name} />
       </div>
 
       <CardDetailsContainer>
-        <CardHeader>{country}</CardHeader>
+        <CardHeader>{name}</CardHeader>
 
         <div>
           <p>
             Populations: <span>{pop}</span>
           </p>
           <p>
-            Regions: <span>{reg}</span>
+            Region: <span>{reg}</span>
           </p>
           <p>
             Capital: <span>{cap}</span>

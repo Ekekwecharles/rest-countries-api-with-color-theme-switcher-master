@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { setSearchFilterContainerRef } from "../redux/mySlice";
+import { setSearchFilterContainerWidth } from "../redux/mySlice";
+import { useSearchFilter } from "../context/SearchFilterContext";
 
 const StyledSearchFilterMenu = styled.div`
   display: flex;
@@ -18,12 +19,14 @@ type searchFilterMenuProps = {
 export default function SearchFilterMenu({ children }: searchFilterMenuProps) {
   const dispatch = useDispatch();
   const ref = useRef<HTMLDivElement>(null);
+  const { windowWidth } = useSearchFilter();
 
   useEffect(
     function () {
-      if (ref.current) dispatch(setSearchFilterContainerRef(ref));
+      if (ref.current)
+        dispatch(setSearchFilterContainerWidth(ref.current.offsetWidth));
     },
-    [dispatch, ref]
+    [dispatch, ref, windowWidth]
   );
   return <StyledSearchFilterMenu ref={ref}>{children}</StyledSearchFilterMenu>;
 }

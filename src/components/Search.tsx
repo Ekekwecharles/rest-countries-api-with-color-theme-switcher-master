@@ -2,21 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { setSearchRef } from "../redux/mySlice";
+import { setSearchWidth } from "../redux/mySlice";
 import { StoreType } from "../store";
+import { useSearchFilter } from "../context/SearchFilterContext";
 
 const SearchContainer = styled.div`
   position: relative;
-  /* width: 400px; */
 `;
 
 const Input = styled.input`
   border: none;
-  /* width: 400px; */
   width: 100%;
   padding: 1.5rem 5rem;
   border-radius: 5px;
-  /* color: var(--color-input); */
   color: var(--color-text);
   background-color: var(--elements-bg);
 
@@ -31,18 +29,24 @@ const Input = styled.input`
   }
 `;
 
-export default function Search() {
+interface Searchprops {
+  searchValue: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export default function Search({ searchValue, onChange }: Searchprops) {
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
-  const [searchWidth, setSearchWidth] = useState("400px");
+  const [searchElementWidth, setSearchElementWidth] = useState("400px");
+  const { setWindowWidth } = useSearchFilter();
 
-  const { searchRef, filterRef, searchFilteContainerRef } = useSelector(
+  const { searchFilterContainerWidth } = useSelector(
     (state: StoreType) => state.mySlice
   );
 
   useEffect(
     function () {
-      if (ref.current) dispatch(setSearchRef(ref));
+      if (ref.current) dispatch(setSearchWidth(ref.current.offsetWidth));
     },
     [dispatch, ref]
   );
@@ -50,22 +54,17 @@ export default function Search() {
   useEffect(
     function () {
       function handleResize() {
-        if (
-          searchRef?.current &&
-          filterRef?.current &&
-          searchFilteContainerRef?.current
-        ) {
-          const containerWidth = searchFilteContainerRef.current.offsetWidth;
-          const searchWidth = searchRef.current.offsetWidth;
-          const filterWidth = filterRef.current.offsetWidth;
+        if (searchFilterContainerWidth) {
+          setWindowWidth(window.innerWidth);
+          const containerWidth = searchFilterContainerWidth;
           const threshold = 400 + 200 + 21;
 
           if (threshold > containerWidth) {
-            setSearchWidth("100%");
+            setSearchElementWidth("100%");
           }
 
           if (threshold < containerWidth) {
-            setSearchWidth("400px");
+            setSearchElementWidth("400px");
           }
         }
       }
@@ -74,11 +73,11 @@ export default function Search() {
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
     },
-    [filterRef, searchRef, searchFilteContainerRef]
+    [searchFilterContainerWidth, setWindowWidth]
   );
 
   return (
-    <SearchContainer ref={ref} style={{ width: `${searchWidth}` }}>
+    <SearchContainer ref={ref} style={{ width: `${searchElementWidth}` }}>
       <FaMagnifyingGlass
         style={{
           fontSize: "1.4rem",
@@ -89,7 +88,11 @@ export default function Search() {
           transform: "translateY(-50%)",
         }}
       />
-      <Input placeholder="Search for a country..." />
+      <Input
+        placeholder="Search for a country..."
+        value={searchValue}
+        onChange={onChange}
+      />
     </SearchContainer>
   );
 }

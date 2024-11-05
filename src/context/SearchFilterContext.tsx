@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 type SearchFilterContextType = {
   filter: string;
@@ -9,6 +9,8 @@ type SearchFilterContextType = {
   openFilterOptions: () => void;
   filterOptionsOpen: boolean;
   toggleFilterOptions: () => void;
+  windowWidth: number | null;
+  setWindowWidth: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 const SearchFilterContext = createContext<SearchFilterContextType | undefined>(
@@ -23,6 +25,14 @@ function SearchFilterProvider({ children }: searchFilterProps) {
   const [filter, setFilter] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const [filterOptionsOpen, setFilterOptionsOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState<number | null>(null);
+
+  useEffect(
+    function () {
+      console.log("FILTER", filter);
+    },
+    [filter]
+  );
 
   function closeFilterOptions() {
     setFilterOptionsOpen(false);
@@ -34,7 +44,6 @@ function SearchFilterProvider({ children }: searchFilterProps) {
 
   function toggleFilterOptions() {
     setFilterOptionsOpen((value) => !value);
-    
   }
 
   return (
@@ -48,6 +57,8 @@ function SearchFilterProvider({ children }: searchFilterProps) {
         openFilterOptions,
         toggleFilterOptions,
         filterOptionsOpen,
+        windowWidth,
+        setWindowWidth,
       }}
     >
       {children}

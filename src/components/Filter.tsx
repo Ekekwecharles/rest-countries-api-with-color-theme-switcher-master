@@ -5,7 +5,7 @@ import { useSearchFilter } from "../context/SearchFilterContext";
 import { useOutsideClick } from "../hooks/useOutsideClick";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setFilterRef } from "../redux/mySlice";
+import { setFilterWidth } from "../redux/mySlice";
 
 const FilterContainer = styled.div`
   width: 20rem;
@@ -31,9 +31,10 @@ const FilterSelected = styled.div`
   font-weight: bold;
 `;
 
-const FilterOptions = styled.ul<{ isOpen: boolean }>`
+const FilterOptions = styled.ul.withConfig({
+  shouldForwardProp: (prop) => prop !== "isOpen",
+})<{ isOpen: boolean }>`
   background-color: var(--elements-bg);
-  border: 1px solid red;
   position: absolute;
   top: calc(100% + 5px);
   width: 100%;
@@ -56,7 +57,7 @@ export default function Filter() {
 
   useEffect(
     function () {
-      if (ref.current) dispatch(setFilterRef(ref));
+      if (ref.current) dispatch(setFilterWidth(ref.current.offsetWidth));
     },
     [dispatch, ref]
   );
@@ -67,7 +68,6 @@ export default function Filter() {
         <p>Filter by Region</p> <HiChevronDown />
       </FilterSelected>
 
-      {/* {filterOptionsOpen && ( */}
       <FilterOptions isOpen={filterOptionsOpen}>
         <FilterOption value="africa">Africa</FilterOption>
         <FilterOption value="america">America</FilterOption>
@@ -75,7 +75,6 @@ export default function Filter() {
         <FilterOption value="europe">Europe</FilterOption>
         <FilterOption value="oceania">Oceania</FilterOption>
       </FilterOptions>
-      {/* )} */}
     </FilterContainer>
   );
 }

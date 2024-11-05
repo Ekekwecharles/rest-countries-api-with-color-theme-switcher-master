@@ -22,13 +22,24 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 
+  #root {
+    /* background-color: green; */
+    height: 100%;
+  }
+
   html {
   font-size: 62.5%;
+  height: 100%;
+
+  @media (max-width: 31.35em) {
+    font-size: 53%;
+  }
   }
 
   body {
   font-family: "Nunito Sans", sans-serif;
   color: var(--color-text);
+  height: 100%;
   }
 
   *,
