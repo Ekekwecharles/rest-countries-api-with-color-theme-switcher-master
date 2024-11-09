@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { HiOutlineMoon } from "react-icons/hi2";
+import { IoSunnySharp } from "react-icons/io5";
 import { useDarkMode } from "../context/DarkModeContext";
 
 const StyledHeader = styled.header`
@@ -21,7 +22,7 @@ const StyledHeader = styled.header`
 
   & div:last-child {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.6rem;
     font-size: 1.2rem;
     font-weight: bold;
   }
@@ -36,21 +37,27 @@ export default function Header() {
 
   return (
     <StyledHeader>
-      <div>Where is the world?</div>
+      <div>Where in the world?</div>
       <DarkModeContainer onClick={toggleDarkMode}>
         {isDarkMode && (
-          <HiOutlineMoon
-            style={{
-              fontSize: "1.5rem",
-              fill: "white",
-              stroke: "var(--elements-bg)",
-            }}
-          />
+          // <HiOutlineMoon/>
+          <>
+            <IoSunnySharp
+              style={{
+                fontSize: "1.5rem",
+                // fill: "white",
+                stroke: "white",
+              }}
+            />
+            <p>Light Mode</p>
+          </>
         )}
         {!isDarkMode && (
-          <HiOutlineMoon style={{ fontSize: "1.5rem", stroke: "black" }} />
+          <>
+            <HiOutlineMoon style={{ fontSize: "1.5rem", stroke: "black" }} />
+            <p>Dark Mode</p>
+          </>
         )}
-        <p>Dark Mode</p>
       </DarkModeContainer>
     </StyledHeader>
   );

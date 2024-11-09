@@ -69,6 +69,7 @@ export default function Filter() {
       </FilterSelected>
 
       <FilterOptions isOpen={filterOptionsOpen}>
+        <FilterOption value="">All Regions</FilterOption>
         <FilterOption value="africa">Africa</FilterOption>
         <FilterOption value="america">America</FilterOption>
         <FilterOption value="asia">Asia</FilterOption>

@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 const StyledLayout = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  /* height: 100%; */
 `;
 
 const Main = styled.main`

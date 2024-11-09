@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 type SearchFilterContextType = {
   filter: string;
@@ -26,13 +26,6 @@ function SearchFilterProvider({ children }: searchFilterProps) {
   const [search, setSearch] = useState<string>("");
   const [filterOptionsOpen, setFilterOptionsOpen] = useState(false);
   const [windowWidth, setWindowWidth] = useState<number | null>(null);
-
-  useEffect(
-    function () {
-      console.log("FILTER", filter);
-    },
-    [filter]
-  );
 
   function closeFilterOptions() {
     setFilterOptionsOpen(false);

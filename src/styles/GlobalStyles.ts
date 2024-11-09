@@ -23,7 +23,6 @@ const GlobalStyles = createGlobalStyle`
   }
 
   #root {
-    /* background-color: green; */
     height: 100%;
   }
 
@@ -40,6 +39,7 @@ const GlobalStyles = createGlobalStyle`
   font-family: "Nunito Sans", sans-serif;
   color: var(--color-text);
   height: 100%;
+  background-color: var(--color-bg);
   }
 
   *,

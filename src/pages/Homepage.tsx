@@ -6,12 +6,17 @@ import { getCountries } from "../services/apiCountries";
 import Spinner from "../ui/Spinner";
 import Search from "../components/Search";
 import SearchFilterMenu from "../components/SearchFilterMenu";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchFilter } from "../context/SearchFilterContext";
+import { Country } from "../types";
+import Pagination from "../ui/Pagination";
+import Error from "./Error";
+import { useSearchParams } from "react-router-dom";
 
 const StyledHomepage = styled.div`
   background-color: var(--color-bg);
   padding: 2.5rem 4rem;
+  padding-bottom: 4rem;
   height: 100%;
 `;
 
@@ -22,59 +27,124 @@ const Countries = styled.div`
   margin-top: 4rem;
 `;
 
-interface Country {
-  capital: string;
-  region: string;
-  name: string;
-  population: number;
-  flags: {
-    png: string;
-  };
-}
+const SearchNotFound = styled.div`
+  font-size: 2rem;
+  grid-column: 1/-1;
+`;
+
+const COUNTRIES_PER_PAGE = 12;
 
 export default function Homepage() {
   const [searchValue, setSearchValue] = useState("");
-
   const { filter } = useSearchFilter();
 
-  const { isLoading, data: countries } = useQuery<Country[]>({
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialPage = parseInt(searchParams.get("page") || "1", 10);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  const {
+    isLoading,
+    isError,
+    error,
+    data: countries,
+  } = useQuery<Country[]>({
     queryFn: getCountries,
     queryKey: ["countries"],
     staleTime: Infinity,
   });
 
-  if (isLoading) return <Spinner />;
-
-  // Filter the countries based on the search term
-  const filteredCountries = countries?.filter(
+  let filteredCountries = countries?.filter(
     (country) =>
       country.name.toLowerCase().includes(searchValue.toLowerCase()) &&
       country.region.toLowerCase().includes(filter.toLowerCase())
   );
 
-  return (
-    <StyledHomepage>
-      <SearchFilterMenu>
-        <Search
-          searchValue={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-        <Filter />
-      </SearchFilterMenu>
+  const dataSize = useMemo(
+    () => filteredCountries?.length || 0,
+    [filteredCountries]
+  );
 
-      <Countries>
-        {filteredCountries?.map((country) => (
-          <Card
-            key={country.name}
-            cap={country.capital}
-            reg={country.region}
-            name={country.name}
-            pop={country.population}
-            img={country.flags.png}
-            country={country}
+  const totalPage = useMemo(
+    () => Math.ceil(dataSize / COUNTRIES_PER_PAGE),
+    [dataSize]
+  );
+
+  useEffect(
+    function () {
+      setSearchParams({ page: currentPage.toString() });
+    },
+    [currentPage, setSearchParams]
+  );
+
+  useEffect(
+    function () {
+      setCurrentPage(1);
+    },
+    [searchValue, filter]
+  );
+
+  if (isError) {
+    console.log(error);
+    return <Error />;
+  }
+
+  if (isLoading) return <Spinner />;
+
+  const startIndex = (currentPage - 1) * COUNTRIES_PER_PAGE;
+  const endIndex = startIndex + COUNTRIES_PER_PAGE;
+
+  filteredCountries = filteredCountries?.slice(startIndex, endIndex);
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevState) => Math.max(prevState - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevState) => Math.min(prevState + 1, totalPage));
+  };
+
+  return (
+    <>
+      <StyledHomepage>
+        <SearchFilterMenu>
+          <Search
+            searchValue={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
           />
-        ))}
-      </Countries>
-    </StyledHomepage>
+          <Filter />
+        </SearchFilterMenu>
+
+        <Countries>
+          {filteredCountries?.length === 0 ? (
+            <SearchNotFound>
+              No country matches your search in this region.
+            </SearchNotFound>
+          ) : (
+            filteredCountries?.map((country) => (
+              <Card
+                key={country.name}
+                cap={country.capital}
+                reg={country.region}
+                name={country.name}
+                pop={country.population}
+                img={country.flags.png}
+                country={country}
+              />
+            ))
+          )}
+        </Countries>
+      </StyledHomepage>
+      {totalPage > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPage={totalPage}
+          handleNextPage={handleNextPage}
+          handlePrevPage={handlePrevPage}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          dataSize={dataSize}
+        />
+      )}
+    </>
   );
 }

@@ -22,5 +22,14 @@ interface StyledButtonProps {
 
 export default function StyledButton({ children }: StyledButtonProps) {
   const navigate = useNavigate();
-  return <StyleButton onClick={() => navigate(-1)}>{children}</StyleButton>;
+
+  function handleClick() {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  }
+
+  return <StyleButton onClick={handleClick}>{children}</StyleButton>;
 }

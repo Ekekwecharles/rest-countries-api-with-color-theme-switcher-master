@@ -8,6 +8,7 @@ import { DarkModeProvider } from "./context/DarkModeContext";
 import { Provider } from "react-redux";
 import store from "./store";
 import CountryInfoPage from "./pages/CountryInfoPage";
+import PageNotFound from "./pages/PageNotFound";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,12 +28,14 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route element={<Applayout />}>
-                  <Route index element={<Homepage />}></Route>
+                  <Route index element={<Homepage />} />
                   <Route
-                    path="/country-info"
+                    path="/country-info/:countryName"
                     element={<CountryInfoPage />}
-                  ></Route>
+                  />
                 </Route>
+                {/* <Route path="error" element={<Error />} /> */}
+                <Route path="*" element={<PageNotFound />} />
               </Routes>
             </BrowserRouter>
           </SearchFilterProvider>

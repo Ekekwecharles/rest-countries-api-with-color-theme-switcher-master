@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import Border from "../components/Border";
@@ -7,9 +7,15 @@ import StyledButton from "../components/StyledButton";
 import { HiArrowLongLeft } from "react-icons/hi2";
 import { useSearchFilter } from "../context/SearchFilterContext";
 import { useEffect } from "react";
+import { getCountryWithFullName } from "../services/apiCountries";
+import { useQuery } from "@tanstack/react-query";
+import Spinner from "../ui/Spinner";
+import Error from "./Error";
 
 const CountryInfoContainer = styled.div`
-  padding: 5rem;
+  padding: 4rem 5rem 0;
+  padding-bottom: 0;
+
   background-color: var(--color-bg);
   color: var(--color-text);
   height: 100%;
@@ -35,7 +41,7 @@ const CountryInfoContainer = styled.div`
 `;
 
 const CountryInfo = styled.div`
-  margin-top: 5rem;
+  margin-top: 4rem;
   display: flex;
   gap: 10rem;
   align-items: center;
@@ -136,9 +142,23 @@ const FlexSmall = styled.div`
 
 export default function CountryInfoPage() {
   const location = useLocation();
-  const { country } = location.state || {};
 
+  const { countryName } = useParams();
   const { filterOptionsOpen, closeFilterOptions } = useSearchFilter();
+  const newCountry = location.state?.newCountry;
+
+  const {
+    data: countryData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["country", countryName],
+    queryFn: () => getCountryWithFullName(countryName!),
+    enabled: !newCountry && !!countryName,
+  });
+
+  const country = newCountry || countryData;
 
   useEffect(
     function () {
@@ -147,6 +167,26 @@ export default function CountryInfoPage() {
     [closeFilterOptions, filterOptionsOpen]
   );
 
+  useEffect(
+    function () {
+      if (country) {
+        document.title = `${country?.name}`;
+      } else {
+        document.title = "Loading country details...";
+      }
+    },
+    [country]
+  );
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (isError) {
+    return <Error />;
+    console.log("💥💥💥", error);
+  }
+
   return (
     <CountryInfoContainer>
       <StyledButton>
@@ -154,41 +194,42 @@ export default function CountryInfoPage() {
       </StyledButton>
       <CountryInfo>
         <ImageContainer>
-          <Image src={country.flags.png} />
+          <Image src={country?.flags.png || ""} />
         </ImageContainer>
 
         <Info>
           <CountryName>
-            <h3>{country.name}</h3>
+            <h3>{country?.name}</h3>
           </CountryName>
           <DetailsFirstPart>
             <h4>
-              Native Name: <span>{country.nativeName}</span>
+              Native Name: <span>{country?.nativeName}</span>
             </h4>
             <h4>
-              Population: <span>{country.population}</span>
+              Population: <span>{country?.population.toLocaleString()}</span>
             </h4>
             <h4>
-              Region: <span>{country.region}</span>
+              Region: <span>{country?.region}</span>
             </h4>
             <h4>
-              Sub Region: <span>{country.subregion}</span>
+              Sub Region: <span>{country?.subregion}</span>
             </h4>
             <h4>
-              Capital: <span>{country.capital}</span>
+              Capital: <span>{country?.capital}</span>
             </h4>
           </DetailsFirstPart>
           <DetailsSecondPart>
             <h4>
-              Top Level Domain: <span>{country.topLevelDomain[0]}</span>
+              Top Level Domain:{" "}
+              <span>{country?.topLevelDomain?.[0] || "N/A"}</span>
             </h4>
             <h4>
-              Currencies: <span>{country.currencies[0].name}</span>
+              Currencies: <span>{country?.currencies?.[0]?.name || "N/A"}</span>
             </h4>
             <h4>
               Languages:{" "}
               <span>
-                {country.languages
+                {country?.languages
                   .map((languageObj: { name: string }) => languageObj.name)
                   .join(", ")}
               </span>
@@ -197,7 +238,7 @@ export default function CountryInfoPage() {
           <BorderCountries>
             <h4>Border Countries: </h4>
             <FlexSmall>
-              {country.borders && country.borders.length > 0 ? (
+              {country?.borders && country.borders.length > 0 ? (
                 country.borders.map((borderCountryCode: string) => (
                   <Border
                     borderCountryCode={borderCountryCode}
@@ -214,3 +255,245 @@ export default function CountryInfoPage() {
     </CountryInfoContainer>
   );
 }
+
+// WORKING VERSION 1
+// export default function CountryInfoPage() {
+//   const location = useLocation();
+//   // const { country } = location.state || {};
+
+//   const { countryName } = useParams();
+//   const { filterOptionsOpen, closeFilterOptions } = useSearchFilter();
+//   const [countryApi, setCountryApi] = useState<Country | undefined>(undefined);
+//   const country = location.state?.newCountry || countryApi;
+
+//   useEffect(function () {
+//     async function getCountrywithfullname() {
+//       if (!country) {
+//         const countryFromParam = await getCountryWithFullName(countryName!);
+//         setCountryApi(countryFromParam);
+//       }
+//     }
+
+//     getCountrywithfullname();
+//   }, []);
+
+//   useEffect(
+//     function () {
+//       if (filterOptionsOpen) closeFilterOptions();
+//     },
+//     [closeFilterOptions, filterOptionsOpen]
+//   );
+
+//   return (
+//     <CountryInfoContainer>
+//       <StyledButton>
+//         <HiArrowLongLeft /> Back
+//       </StyledButton>
+//       <CountryInfo>
+//         <ImageContainer>
+//           <Image src={country?.flags.png || ""} />
+//         </ImageContainer>
+
+//         <Info>
+//           <CountryName>
+//             <h3>{country?.name}</h3>
+//           </CountryName>
+//           <DetailsFirstPart>
+//             <h4>
+//               Native Name: <span>{country?.nativeName}</span>
+//             </h4>
+//             <h4>
+//               Population: <span>{country?.population}</span>
+//             </h4>
+//             <h4>
+//               Region: <span>{country?.region}</span>
+//             </h4>
+//             <h4>
+//               Sub Region: <span>{country?.subregion}</span>
+//             </h4>
+//             <h4>
+//               Capital: <span>{country?.capital}</span>
+//             </h4>
+//           </DetailsFirstPart>
+//           <DetailsSecondPart>
+//             <h4>
+//               Top Level Domain: <span>{country?.topLevelDomain[0]}</span>
+//             </h4>
+//             <h4>
+//               Currencies: <span>{country?.currencies[0].name}</span>
+//             </h4>
+//             <h4>
+//               Languages:{" "}
+//               <span>
+//                 {country?.languages
+//                   .map((languageObj: { name: string }) => languageObj.name)
+//                   .join(", ")}
+//               </span>
+//             </h4>
+//           </DetailsSecondPart>
+//           <BorderCountries>
+//             <h4>Border Countries: </h4>
+//             <FlexSmall>
+//               {country?.borders && country.borders.length > 0 ? (
+//                 country.borders.map((borderCountryCode: string) => (
+//                   <Border
+//                     borderCountryCode={borderCountryCode}
+//                     key={borderCountryCode}
+//                   />
+//                 ))
+//               ) : (
+//                 <StyledButton>No Bordering Countries</StyledButton>
+//               )}
+//             </FlexSmall>
+//           </BorderCountries>
+//         </Info>
+//       </CountryInfo>
+//     </CountryInfoContainer>
+//   );
+// }
+
+// NOT WORKING VERSION 2 => figure out later
+// export default function CountryInfoPage() {
+//   const location = useLocation();
+//   const { countryName } = useParams();
+//   const { filterOptionsOpen, closeFilterOptions } = useSearchFilter();
+//   const [countryApi, setCountryApi] = useState([]);
+//   // const { country } = location.state || {};
+//   const country = location.state?.country || countryApi[0];
+//   // console.log("DEBUGGING", country, countryName);
+
+//   useEffect(function () {
+//     async function getCountrywithfullname() {
+//       console.log("getCountrywithfullname was called");
+//       if (!country) {
+//         // console.log("DEBUGGING", country, countryName);
+//         const countryFromParam = await getCountryWithFullName(countryName!);
+//         setCountryApi(countryFromParam);
+//         console.log("SEARCH WITH FULL NAME", countryFromParam);
+//         console.log("FROM VERCEL API", country);
+//       }
+//     }
+
+//     getCountrywithfullname();
+//   }, []);
+
+//   useEffect(
+//     function () {
+//       if (filterOptionsOpen) closeFilterOptions();
+//     },
+//     [closeFilterOptions, filterOptionsOpen]
+//   );
+
+//   type Country = {
+//     nativeName?: string;
+//     name?: {
+//       nativeName?: {
+//         [key: string]: { common: string };
+//       };
+//     };
+//   };
+
+//   function getNativeName(country: Country): string {
+//     // Check if nativeName is already a string
+//     if (typeof country?.nativeName === "string") return country.nativeName;
+
+//     // Access `common` property safely
+//     const nativeNameObj = Object.values(country?.name?.nativeName ?? {})[0];
+//     return typeof nativeNameObj === "object" &&
+//       nativeNameObj !== null &&
+//       "common" in nativeNameObj
+//       ? (nativeNameObj as { common: string }).common
+//       : "N/A";
+//   }
+
+//   return (
+//     <CountryInfoContainer>
+//       <StyledButton>
+//         <HiArrowLongLeft /> Back
+//       </StyledButton>
+//       <CountryInfo>
+//         <ImageContainer>
+//           <Image src={country?.flags?.png || ""} />
+//         </ImageContainer>
+
+//         <Info>
+//           <CountryName>
+//             <h3>{country?.name || country?.common?.name}</h3>
+//           </CountryName>
+//           <DetailsFirstPart>
+//             <h4>Native Name: {getNativeName(country)}</h4>
+//             <h4>
+//               Population:{" "}
+//               <span>{country?.population.toLocaleString() || "N/A"}</span>
+//             </h4>
+//             <h4>
+//               Region: <span>{country?.region}</span>
+//             </h4>
+//             <h4>
+//               Sub Region: <span>{country?.subregion}</span>
+//             </h4>
+//             <h4>
+//               Capital: <span>{country?.capital || country?.capital[0]}</span>
+//             </h4>
+//           </DetailsFirstPart>
+//           <DetailsSecondPart>
+//             <h4>
+//               Top Level Domain:{" "}
+//               <span>{country?.topLevelDomain?.[0] || country?.tld?.[0]}</span>
+//             </h4>
+//             <h4>
+//               Currencies:{" "}
+//               {/* <span>
+//                 {country?.currencies[0]?.name ||
+//                   (
+//                     Object.values(country?.currencies || {})[0] as {
+//                       name: string;
+//                     }
+//                   )?.name}
+//               </span> */}
+//               <span>
+//                 {country?.currencies
+//                   ? Array.isArray(country.currencies)
+//                     ? country.currencies[0]?.name
+//                     : (Object.values(country.currencies)[0] as { name: string })
+//                         ?.name
+//                   : "N/A"}
+//               </span>
+//             </h4>
+//             <h4>
+//               Languages:{" "}
+//               {/* <span>
+//                 {country?.languages
+//                   .map((languageObj: { name: string }) => languageObj.name)
+//                   .join(", ") ||
+//                   Object.values(country?.languages || {})?.join(", ")}
+//               </span> */}
+//               <span>
+//                 {Array.isArray(country?.languages)
+//                   ? country.languages
+//                       .map((languageObj: { name: string }) => languageObj.name)
+//                       .join(", ")
+//                   : Object.values(country?.languages || {}).join(", ")}
+//               </span>
+//             </h4>
+//           </DetailsSecondPart>
+//           <BorderCountries>
+//             <h4>Border Countries: </h4>
+//             <FlexSmall>
+//               {country?.borders && country?.borders.length > 0 ? (
+//                 country.borders.map((borderCountryCode: string) => (
+//                   <Border
+//                     borderCountryCode={borderCountryCode}
+//                     key={borderCountryCode}
+//                   />
+//                 ))
+//               ) : (
+//                 <StyledButton>No Bordering Countries</StyledButton>
+//               )}
+//             </FlexSmall>
+//           </BorderCountries>
+//         </Info>
+//       </CountryInfo>
+//     </CountryInfoContainer>
+//   );
+// }

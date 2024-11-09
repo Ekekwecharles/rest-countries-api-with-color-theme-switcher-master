@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { Country } from "../types";
 
 const StyledCard = styled.div`
   border-radius: 5px;
   overflow: hidden;
   background-color: var(--elements-bg);
-  /* box-shadow: 0px 2px 10px 0px var(--box-shadow-color); */
   box-shadow: 0px 0px 10px 2px var(--box-shadow-color);
   cursor: pointer;
 
@@ -42,26 +42,63 @@ type cardProps = {
   reg: string;
   cap: string;
   name: string;
-  country: object;
+  country: Country;
 };
 
-export default function Card({ img, pop, reg, cap, name, country }: cardProps) {
+export default function Card({
+  img,
+  pop,
+  reg,
+  cap,
+  name: countryName,
+  country,
+}: cardProps) {
   const navigate = useNavigate();
+
+  const {
+    name,
+    nativeName,
+    population,
+    region,
+    subregion,
+    topLevelDomain,
+    languages,
+    flags,
+    currencies,
+    capital,
+    borders,
+  } = country;
+
+  const newCountry = {
+    name,
+    nativeName,
+    population,
+    region,
+    subregion,
+    topLevelDomain,
+    languages,
+    flags,
+    currencies,
+    capital,
+    borders,
+  };
 
   return (
     <StyledCard
-      onClick={() => navigate("/country-info", { state: { country } })}
+      onClick={() =>
+        navigate(`/country-info/${countryName}`, { state: { newCountry } })
+      }
     >
       <div>
-        <CountryImage src={img} alt={name} />
+        <CountryImage src={img} alt={countryName} />
       </div>
 
       <CardDetailsContainer>
-        <CardHeader>{name}</CardHeader>
+        <CardHeader>{countryName}</CardHeader>
 
         <div>
           <p>
-            Populations: <span>{pop}</span>
+            Populations: <span>{pop.toLocaleString()}</span>
           </p>
           <p>
             Region: <span>{reg}</span>
