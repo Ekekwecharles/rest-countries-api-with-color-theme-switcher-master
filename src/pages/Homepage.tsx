@@ -78,6 +78,7 @@ export default function Homepage() {
 
   useEffect(
     function () {
+      if (searchValue === "" && filter === "") return;
       setCurrentPage(1);
     },
     [searchValue, filter]
