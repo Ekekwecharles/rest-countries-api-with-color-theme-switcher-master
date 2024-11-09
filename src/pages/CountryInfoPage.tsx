@@ -145,7 +145,8 @@ export default function CountryInfoPage() {
 
   const { countryName } = useParams();
   const { filterOptionsOpen, closeFilterOptions } = useSearchFilter();
-  const newCountry = location.state?.newCountry;
+  // const newCountry = location.state?.newCountry;
+  const newCountry = undefined;
 
   const {
     data: countryData,

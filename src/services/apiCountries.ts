@@ -32,6 +32,7 @@ export async function getCountryWithCode(code: string) {
 }
 
 export async function getCountryWithFullName(name: string) {
+  console.log("Name", `${name}`);
   const API_URL = `https://restcountries.com/v3.1/name/${name}?fullText=true&fields=name,flags,population,region,capital,subregion,currencies,languages,borders,tld`;
   console.log("Get Country with full name is called");
 
