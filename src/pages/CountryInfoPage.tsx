@@ -1,4 +1,5 @@
-import { useLocation, useParams } from "react-router-dom";
+// import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import Border from "../components/Border";
@@ -141,7 +142,7 @@ const FlexSmall = styled.div`
 `;
 
 export default function CountryInfoPage() {
-  const location = useLocation();
+  // const location = useLocation();
 
   const { countryName } = useParams();
   const { filterOptionsOpen, closeFilterOptions } = useSearchFilter();
