@@ -2,14 +2,14 @@ import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
 
-const StyleButton = styled.button`
+const StyleButton = styled.button<{ clickable: boolean }>`
   border-radius: 5px;
   padding: 0.7rem 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  cursor: pointer;
+  cursor: ${(props) => (props.clickable ? "pointer" : "default")};
   border: none;
   background-color: var(--elements-bg);
   box-shadow: 0px 0px 4px 1px var(--box-shadow-color);
@@ -18,9 +18,13 @@ const StyleButton = styled.button`
 
 interface StyledButtonProps {
   children: React.ReactNode;
+  clickable?: boolean;
 }
 
-export default function StyledButton({ children }: StyledButtonProps) {
+export default function StyledButton({
+  children,
+  clickable = true,
+}: StyledButtonProps) {
   const navigate = useNavigate();
 
   function handleClick() {
@@ -31,5 +35,13 @@ export default function StyledButton({ children }: StyledButtonProps) {
     }
   }
 
-  return <StyleButton onClick={handleClick}>{children}</StyleButton>;
+  return (
+    <StyleButton
+      onClick={clickable ? handleClick : undefined}
+      disabled={!clickable}
+      clickable={clickable}
+    >
+      {children}
+    </StyleButton>
+  );
 }

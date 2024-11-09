@@ -26,7 +26,7 @@ export default function Border({ borderCountryCode }: BorderProps) {
 
   return (
     <BorderCountry>
-      <StyledButton>{data}</StyledButton>
+      <StyledButton clickable={false}>{data}</StyledButton>
     </BorderCountry>
   );
 }

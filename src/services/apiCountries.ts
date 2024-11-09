@@ -10,6 +10,7 @@ export async function getCountries() {
     return data;
   } catch (e) {
     console.log("💥💥💥", (e as Error).message);
+    throw e;
   }
 }
 
@@ -26,12 +27,13 @@ export async function getCountryWithCode(code: string) {
     return data;
   } catch (e) {
     console.log("💥💥💥", (e as Error).message);
+    throw e;
   }
 }
 
 export async function getCountryWithFullName(name: string) {
-  // const API_URL = `https://restcountries.com/v3.1/name/${name}?fullText=true&fields=name,flags,population,region,capital,subregion,currencies,languages,borders,tld`;
-  const API_URL = `https://restcountries.com/v3.1/name/${name}?fullText=true`;
+  const API_URL = `https://restcountries.com/v3.1/name/${name}?fullText=true&fields=name,flags,population,region,capital,subregion,currencies,languages,borders,tld`;
+  console.log("Get Country with full name is called");
 
   try {
     const res = await fetch(API_URL);
@@ -64,8 +66,10 @@ export async function getCountryWithFullName(name: string) {
       newData.flags = { png: "https://flagcdn.com/w320/af.png" };
     }
 
+    console.log("NEWDATA", newData);
     return newData;
   } catch (e) {
     console.log("💥💥💥", (e as Error).message);
+    throw e;
   }
 }

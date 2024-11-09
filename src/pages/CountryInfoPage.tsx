@@ -246,7 +246,9 @@ export default function CountryInfoPage() {
                   />
                 ))
               ) : (
-                <StyledButton>No Bordering Countries</StyledButton>
+                <StyledButton clickable={false}>
+                  No Bordering Countries
+                </StyledButton>
               )}
             </FlexSmall>
           </BorderCountries>
