@@ -65,9 +65,9 @@ Once you have installed the dependencies and started the development server, you
 
 1. Start the development server:
    ```bash
-   npm start
+   npm run dev
    # or
-   yarn start
+   yarn dev
    ```
 2. Open your browser and navigate to:
 
