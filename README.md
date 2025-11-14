@@ -15,7 +15,17 @@ Rest Countries Api with color theme switcher
 
 ## Overview
 
-This project is a country information app that allows users to search and view details about different countries. It includes features like filtering, dynamic routing, darkmode and responsive design to enhance the user experience.
+This project is a fully functional **country information app** that allows users to search for countries and view detailed information about each one. Users can filter countries, navigate via dynamic routes, toggle **dark mode**, and enjoy a fully **responsive design** across devices.
+
+What makes this project special is that **I built the backend and API myself**. The API handles country data and is hosted on **Vercel**, allowing the frontend to fetch information seamlessly. This includes:
+
+- A **custom serverless API** returning country details (like population, region, capital, flags, currencies, languages, borders, etc.)
+- Support for **dynamic queries** by country name or code
+- Built-in **CORS handling** for smooth frontend integration
+
+## API Repository
+
+Check out the API code here: [GitHub Repository](https://github.com/Ekekwecharles/fake-api-rest-countries)
 
 ## Features
 
@@ -25,6 +35,9 @@ This project is a country information app that allows users to search and view d
 - Persistent caching and data management.
 - State management with Redux and Context API.
 - Pagination
+- Dynamic routing for individual country pages
+- Dark mode toggle
+- Fully responsive layout
 
 ## Technologies Used
 
